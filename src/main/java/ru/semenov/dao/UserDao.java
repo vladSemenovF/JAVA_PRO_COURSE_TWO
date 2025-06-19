@@ -3,16 +3,12 @@ package ru.semenov.dao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.semenov.model.User;
 
-import java.sql.Statement;
-import java.sql.Types;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Objects.nonNull;
@@ -53,7 +49,8 @@ public class UserDao {
             user.setId(key.longValue());
             log.info("Пользователь создан {}", user);
         } else {
-            throw new DataAccessException("ID не сгенерирован") {};
+            throw new DataAccessException("ID не сгенерирован") {
+            };
         }
         return user;
     }

@@ -2,15 +2,21 @@ package ru.semenov;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import ru.semenov.config.ApplicationConfiguration;
 import ru.semenov.model.User;
 import ru.semenov.service.UserService;
 
 @Slf4j
+@Configuration
+@ComponentScan("ru.semenov")
+@Import(ApplicationConfiguration.class)
 public class Main {
     public static void main(String[] args) {
         try (AnnotationConfigApplicationContext context =
-                     new AnnotationConfigApplicationContext(ApplicationConfiguration.class)) {
+                     new AnnotationConfigApplicationContext(Main.class)) {
 
             var userService = context.getBean(UserService.class);
 
