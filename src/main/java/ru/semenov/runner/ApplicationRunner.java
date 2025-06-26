@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ru.semenov.service.UserServiceV2;
+import ru.semenov.service.UserService;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ApplicationRunner implements CommandLineRunner {
-    private final UserServiceV2 service;
+    private final UserService service;
 
 
     @Override
@@ -21,9 +21,8 @@ public class ApplicationRunner implements CommandLineRunner {
         var user2 = service.createUser("Сергей");
         var user3 = service.createUser("Владимир");
 
-        service.getUser(user1.getId()).ifPresent(
-                user -> log.info("Найден пользователь с ID {}: {}", user1.getId(), user)
-        );
+        var user1FromDb = service.getUser(user1.getId());
+        log.info("Найден пользователь с ID {}: {}", user1FromDb.getId(), user1FromDb);
 
         log.info("ВСЕ ПОЛЬЗОВАТЕЛИ:");
         service.getAllUsers().forEach(user ->
@@ -37,9 +36,6 @@ public class ApplicationRunner implements CommandLineRunner {
                 log.info("ПОЛЬЗОВАТЕЛЬ: {}", user)
         );
 
-        service.getUser(user2.getId()).ifPresentOrElse(
-                user -> log.info("ПОЛЬЗОВАТЕЛЬ УДАЛЕН НО НАЙДЕН: {}", user),
-                () -> log.info("ПОЛЬЗОВАТЕЛЬ С ID {} НЕ НАЙДЕН", user2.getId())
-        );
+        var user2FromDb = service.getUser(user2.getId());
     }
 }

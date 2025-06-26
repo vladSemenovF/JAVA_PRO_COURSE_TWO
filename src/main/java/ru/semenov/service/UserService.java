@@ -1,39 +1,36 @@
 package ru.semenov.service;
 
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.semenov.dao.UserDao;
+import ru.semenov.dao.UserRepository;
 import ru.semenov.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
-@Deprecated
+@Slf4j
+@RequiredArgsConstructor
 public class UserService {
+    private final UserRepository repo;
 
-//    private final UserDao userDao;
-//
-//    public UserService(UserDao userDao) {
-//        this.userDao = userDao;
-//    }
-//
-//    public User createUser(String username) {
-//        User user = new User(null, username);
-//        return userDao.createUser(user);
-//    }
-//
-//    public Optional<User> getUser(Long id) {
-//        return userDao.findById(id);
-//    }
-//
-//    public List<User> getAllUsers() {
-//        return userDao.findAll();
-//    }
-//
-//    public void deleteUser(Long id) {
-//        userDao.delete(id);
-//    }
+    public User createUser(String username){
+        var user = new User();
+        user.setUsername(username);
+        return repo.save(user);
+    }
+
+    public User getUser(Long id){
+        return repo.findById(id)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    public List<User> getAllUsers(){
+        return repo.findAll();
+    }
+
+    public void deleteUser(Long id){
+        repo.deleteById(id);
+    }
 }
