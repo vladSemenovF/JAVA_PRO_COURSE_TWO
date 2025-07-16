@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet id="1" author="VVSemenov">
+        <createTable tableName="user_limits">
+            <column name="id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="daily_limit" type="NUMERIC(19,2)" defaultValue="10000.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remaining_limit" type="NUMERIC(19,2)" defaultValue="10000.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="BIGINT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="VVSemenov">
+        <sql>
+            INSERT INTO user_limits (user_id)
+            SELECT generate_series(1, 100);
+        </sql>
+    </changeSet>
+
+    <changeSet id="3" author="VVSemenov">
+        <createSequence
+                sequenceName="revinfo_seq"
+                startValue="1"
+                incrementBy="50"/>
+
+        <createTable tableName="revinfo">
+            <column name="rev" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="revtstmp" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="VVSemenov">
+        <createTable tableName="user_limits_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="daily_limit" type="NUMERIC(19,2)"/>
+            <column name="remaining_limit" type="NUMERIC(19,2)"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="user_limits_aud"
+                baseColumnNames="rev"
+                referencedTableName="revinfo"
+                referencedColumnNames="rev"
+                constraintName="fk_user_limits_aud_revinfo"
+                onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>
