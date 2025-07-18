@@ -18,6 +18,7 @@
         <module>dto-module</module>
         <module>product-service</module>
         <module>payment-service</module>
+        <module>limits-service</module>
     </modules>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
